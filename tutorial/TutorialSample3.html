@@ -1,0 +1,314 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- svn-version: ${svn.version} -->
+<html>
+  <head>
+    <title>Jamon Tutorial - 3. Template Arguments
+</title>
+    <meta name="keywords" content="template,templates,typed,dynamic,text,java,MVC,render,model-view-controller,typesafety,typesafe"></meta>
+    <link rel="SHORTCUT ICON" href="/favicon.ico">
+    <link rel="StyleSheet" href="../base.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+
+    <div id="logo">
+      <h1 id="logo1">Jamon</h1>
+      <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+    <h3 id="tagline">
+      <span class="tagline1">type</span> <span class="tagline2">safe</span> <span class="tagline3">templating</span><br />
+    </h3>
+
+    <div class="header" id="header1"><span /></div>
+    <div class="header" id="header2"><span /></div>
+    <div class="header" id="header3"><span /></div>
+    <div class="header" id="header4"><span /></div>
+
+    <div id="nav">
+      <ul class="nav">
+          <li class="nav"
+    >
+<a href="../index.html" >Home</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Features.html" >Features</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../News.html" >News</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Download.html" >Download</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Contact.html" >Contact</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../About.html" >About</a>
+</li>
+
+        </ul>
+
+        <ul class="nav">
+          <li class="static">Documentation</li>
+          <li class="nav"
+    >
+<a href="../Overview.html" >Overview</a>
+</li>
+
+          <li class="nav"
+    id="current">
+<a href="../tutorial/TutorialPath.html" >Tutorial</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../GeneratedTemplates.html" >Generated classes</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../UserGuide.html" >User's Guide</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Ant.html" >Ant integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Maven.html" >Maven integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Eclipse.html" >Eclipse plugin</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Servlets.html" >Servlet usage</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Reference.html" >Reference manual</a>
+</li>
+
+          <li class="nav">
+           <a href='../javadoc/index.html'>Javadoc</a>
+          </li>
+        </ul>
+      </div>
+      <div id="main">
+        <div class="tutorialNav">
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample2.html">Previous</a>
+  
+
+    </span>
+    <span class="tutorialNavContents">
+      <a href="TutorialPath.html">Tutorial contents</a>
+    </span>
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample4.html">Next</a>
+  
+
+    </span>
+  </div>
+
+
+<h2>Jamon Tutorial - 3. Template Arguments
+</h2>
+
+Templates do not exist in a vacuum; templates exist in order to
+display information. In a model-view-controller architecture, that
+information comes from the model and is passed to the templates to
+ as arguments.
+
+<p>
+
+Arguments to a Jamon template are declared between
+<nobr><code>&lt;%args></code> ... <code>&lt;%/args></code></nobr> tags:
+
+      <pre class="jamon">
+
+&lt;%args&gt;
+  String         title = "Account Summary";
+  java.util.Date effectiveDate;
+  String         userName;
+  java.math.BigDecimal totalBalance;
+  String         alertMessage = "";
+&lt;/%args&gt;
+
+</pre>
+
+
+The above Jamon code declares a template with three required and two
+optional arguments.  The required arguments are:
+<ol>
+  <li><code>java.util.Date effectiveDate</code></li>
+  <li><code>String userName</code></li>
+  <li><code>java.math.BigDecimal totalBalance</code></li>
+</ol>
+
+Any Java class that invokes this template <strong>must</strong> provide
+these three arguments, and they must be provided to the <code>render</code>
+method in the order specified in the
+<nobr><code>&lt;%args></code> ... <code>&lt;%/args></code></nobr> tag.
+
+<p>
+  In addition, there are two optional arguments.  Any java class that
+  invokes this class may provide values to override the default values
+  via the set methods:
+  <ul>
+    <li><code>setTitle(String title)</code></li>
+    <li><code>setAlertMessage(String alertMessage)</code></li>
+  </ul>
+</p>
+
+The above setter methods return the template, allowing multiple calls
+to be <em>chained</em> together.  Thus, to the sample template
+shown above could be invoked with the following code:
+
+<pre class="java">
+    sampleTemplate
+        .setTitle("Most Recent Account Balance");
+        .render(new OutputStreamWriter(System.out),
+                new Date(), "John Public", new BigDecimal("9.99"));
+</pre>
+
+In the above example, the calling code sets the optional argument
+<code>title</code>, does not change the default value for the optional
+argument <code>alertMessage</code>, and then calls the render method
+with the required <code>Writer</code> and the three required arguments.
+<p>
+<div class="note">Note that the <code>render</code>
+method must be called <em>after</em> after the setter methods for the
+optional arguments.</div>
+
+Note that all arguments, both required and optional, are translated
+into Java as <code>final</code> variables.  Thus, the following Jamon
+code would <em>not</em> work:
+
+<pre class="jamon">
+&lt;%args&gt;
+  String message;
+  boolean isError;
+&lt;/%args&gt;
+&lt;%java if (isError) { message = "There was an error"; } // WILL NOT WORK %&gt;
+&lt;% message %&gt;
+</pre>
+
+
+<h3> Putting it all together</h3>
+<ol>
+<li>
+Create a Jamon template
+ <a href="AccountSummaryTemplate.jamon" class="file"><code>AccountSummaryTemplate.jamon</code></a>:
+<pre class="jamon">&lt;%args&gt;
+  String         title = "Account Summary";
+  java.util.Date effectiveDate;
+  String         userName;
+  java.math.BigDecimal totalBalance;
+  String         alertMessage = "";
+&lt;/%args&gt;
+
+Title:             &lt;% title %&gt;
+Effective Date:    &lt;% effectiveDate %&gt;
+Name:              &lt;% userName %&gt;
+&lt;%java java.math.BigDecimal scaledBalance =
+   totalBalance.setScale(2, java.math.BigDecimal.ROUND_HALF_UP); %&gt;
+Total Balance:     &lt;% scaledBalance %&gt;
+
+&lt;% alertMessage %&gt;
+</pre>
+
+
+
+<li> Write a java class to call the template:
+<a href="AccountSummaryTut3.java" class="file"><code>AccountSummaryTut3.java</code></a>:
+<pre class="java">import java.io.OutputStreamWriter;
+import java.util.Date;
+import java.math.BigDecimal;
+
+public class AccountSummaryTut3 {
+  public static void main(String[] argv) throws Exception {
+    new AccountSummaryTemplate()
+      .setTitle("Most Recent Account Balances")
+      .render(new OutputStreamWriter(System.out),
+              new Date(), "John Public", new BigDecimal(9.99));
+  }
+}
+</pre>
+
+
+<li> Set the classpath, process the template, compile, and run the program:
+<pre class="tty">
+    export CLASSPATH=.:/path/to/jamon-runtime.jar:/path/to/jamon-api.jar:/path/to/jamon-processor.jar
+    java org.jamon.TemplateProcessor --destDir=. AccountSummaryTemplate
+    javac AccountSummaryTut3.java AccountSummaryTemplate*.java
+    java AccountSummaryTut3
+</pre>
+
+<li> You should see:
+<pre class="tty">
+Title:             Most Recent Account Balances
+Effective Date:    Wed Aug 12 20:38:30 EDT 2009
+Name:              John Public
+Total Balance:     9.99
+
+
+</pre>
+
+
+</ol>
+
+<p>
+
+<div class="tutorialNav">
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample2.html">Previous</a>
+  
+
+    </span>
+    <span class="tutorialNavContents">
+      <a href="TutorialPath.html">Tutorial contents</a>
+    </span>
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample4.html">Next</a>
+  
+
+    </span>
+  </div>
+
+
+
+
+
+      </div>
+
+    <div id="logo">
+    <h1 id="logo1">Jamon</h1>
+    <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+
+  </body>
+</html>
+

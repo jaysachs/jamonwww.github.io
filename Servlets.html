@@ -1,0 +1,919 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- svn-version: ${svn.version} -->
+<html>
+  <head>
+    <title>Servlets with Jamon</title>
+    <meta name="keywords" content="template,templates,typed,dynamic,text,java,MVC,render,model-view-controller,typesafety,typesafe"></meta>
+    <link rel="SHORTCUT ICON" href="/favicon.ico">
+    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+
+    <div id="logo">
+      <h1 id="logo1">Jamon</h1>
+      <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+    <h3 id="tagline">
+      <span class="tagline1">type</span> <span class="tagline2">safe</span> <span class="tagline3">templating</span><br />
+    </h3>
+
+    <div class="header" id="header1"><span /></div>
+    <div class="header" id="header2"><span /></div>
+    <div class="header" id="header3"><span /></div>
+    <div class="header" id="header4"><span /></div>
+
+    <div id="nav">
+      <ul class="nav">
+          <li class="nav"
+    >
+<a href="index.html" >Home</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Features.html" >Features</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="News.html" >News</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Download.html" >Download</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Contact.html" >Contact</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="About.html" >About</a>
+</li>
+
+        </ul>
+
+        <ul class="nav">
+          <li class="static">Documentation</li>
+          <li class="nav"
+    >
+<a href="Overview.html" >Overview</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="tutorial/TutorialPath.html" >Tutorial</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="GeneratedTemplates.html" >Generated classes</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="UserGuide.html" >User's Guide</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Ant.html" >Ant integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Maven.html" >Maven integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Eclipse.html" >Eclipse plugin</a>
+</li>
+
+          <li class="nav"
+    id="current">
+<a href="Servlets.html" >Servlet usage</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Reference.html" >Reference manual</a>
+</li>
+
+          <li class="nav">
+           <a href='javadoc/index.html'>Javadoc</a>
+          </li>
+        </ul>
+      </div>
+      <div id="main">
+        <h1>Servlets with Jamon</h1>
+
+The goal of this document is to guide the reader through the
+process of developing and deploying servlets that use Jamon to
+generate the HTML (i.e., for their <em>view</em>, in <a
+href="http://ootips.org/mvc-pattern.html">MVC</a> parlance).  Thus
+the servlets will be kept simple but nevertheless representative
+of a typical development environment.
+<p>
+<ol>
+
+  <li><span class="concept">Prerequisites</span>
+To get the examples described in this document to work you will need
+<ul>
+  <li><a href="http://java.sun.com/j2se">Java SDK 1.3.1</a> or later,
+  <li>a <a href="http://java.sun.com/products/servlet">servlet</a> container
+      compliant with version 2.2 (or later) of the servlet specification,
+  <li><a href="http://www.jamon.org">Jamon</a> version
+       1.0 or later, and
+  <li><a href="http://jakarta.apache.org/ant">Ant</a> version 1.4 or later.
+</ul></li>
+
+  <li><span class="concept">Hello World</span>
+In this section we will create a very simple servlet that displays
+a page generated using Jamon.  To this end we will present
+<ul>
+  <li>the complete code for a servlet,</li>
+  <li>a (Jamon) template,</li>
+  <li>a deployment descriptor (i.e., the <code>web.xml</code> file), and</li>
+  <li>an Ant script to build the project.</li>
+</ul>
+
+In addition the exact directory layout will be specified, but of
+course in your own projects you are free to use your own layout.  Note
+that
+
+<ul>
+<li>
+    All paths are relative to a base directory for the tutorial.  For
+    example, if you choose the base directory to be <code>/home/alice/tutorial</code>, then a reference to a directory
+    <code>templates/foo/bar</code> means <code>/home/alice/tutorial/templates/foo/bar</code>.  A reference to a file
+    <code>web.xml</code> means <code>/home/alice/tutorial/web.xml</code>
+  </li>
+  <li>
+    If you wish to avoid typing in the examples in this section all
+      the source code is available in a <a href="foobar.zip">zipfile</a>.
+  </li>
+
+</ul>
+
+<p>
+
+In directory <code class="file">templates/foo/bar</code> create a file called
+<a class="file" href="templates/foo/bar/HelloTemplate.jamon">HelloTemplate.jamon</a> (you should <em>save</em>
+this file since your browser may not display it correctly) containing:
+
+<pre class="jamon">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    Hello world!
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+In directory <code class="file">src/foo/bar</code> create
+a file <a href="src/foo/bar/HelloServlet.java">HelloServlet.java</a> containing:
+
+<pre class="java">package foo.bar;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jamon.compiler.RecompilingTemplateManager;
+import org.jamon.TemplateManagerSource;
+
+public final class HelloServlet
+    extends HttpServlet {
+
+    public void init() {
+        RecompilingTemplateManager.Data data =
+            new RecompilingTemplateManager.Data();
+        data.setSourceDir("templates");
+        data.setWorkDir("build/work");
+        TemplateManagerSource.setTemplateManager(
+            new RecompilingTemplateManager(data));
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        response.setContentType("text/html");
+        new HelloTemplate().render(response.getWriter());
+    }
+}
+</pre>
+
+
+Create the following deployment descriptor by placing the following in a file
+called <a href="web.xml">web.xml</a>:
+
+<pre class="webxml">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+
+&lt;!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd"&gt;
+
+&lt;web-app&gt;
+
+    &lt;servlet&gt;
+      &lt;servlet-name&gt;Hello&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;foo.bar.HelloServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;Hello&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+&lt;/web-app&gt;
+</pre>
+
+
+Create an Ant script by placing the following in a file called
+<a href="build.xml">build.xml</a>:
+
+<pre class="ant">&lt;?xml version="1.0"?&gt;
+
+&lt;project name="FooBar" default="war"&gt;
+
+    &lt;property name="build.dir" value="build"/&gt;
+    &lt;property name="build.src.dir" value="${build.dir}/src"/&gt;
+    &lt;property name="classes.dir" value="${build.dir}/classes"/&gt;
+
+    &lt;target name="templates"&gt;
+        &lt;mkdir dir="${build.src.dir}"/&gt;
+        &lt;taskdef name="jamon" classname="org.jamon.ant.JamonTask" classpathref="maven.runtime.classpath"/&gt;
+        &lt;jamon destdir="${build.src.dir}" srcdir="templates"/&gt;
+    &lt;/target&gt;
+
+    &lt;target name="compile" depends="templates"&gt;
+        &lt;mkdir dir="${classes.dir}"/&gt;
+        &lt;javac destdir="${classes.dir}" classpathref="maven.runtime.classpath"&gt;
+            &lt;src path="src"/&gt;
+            &lt;src path="${build.src.dir}"/&gt;
+        &lt;/javac&gt;
+    &lt;/target&gt;
+
+    &lt;target name="war" depends="compile"&gt;
+        &lt;mkdir dir="lib"/&gt;
+        &lt;copy todir="lib" verbose="true" flatten="true"&gt;
+            &lt;fileset refid="jamon.libs"/&gt;
+            &lt;mapper&gt;
+                &lt;chainedmapper&gt;
+                    &lt;flattenmapper/&gt;
+                    &lt;globmapper from="jamon-*.jar" to="jamon-*.jar"/&gt;
+                &lt;/chainedmapper&gt;
+            &lt;/mapper&gt;
+        &lt;/copy&gt;
+        &lt;war destfile="foobar.war" webxml="web.xml"&gt;
+            &lt;classes dir="${classes.dir}"/&gt;
+            &lt;lib dir="lib"/&gt;
+        &lt;/war&gt;
+    &lt;/target&gt;
+
+    &lt;target name="clean"&gt;
+        &lt;delete dir="${build.dir}"/&gt;
+    &lt;/target&gt;
+
+&lt;/project&gt;
+</pre>
+
+
+In order to run this script you need to tell Ant where to find the Jamon libraries
+and the servlet APIs.  For example, say the jamon JAR file is in
+<code>/usr/share/java/jamon.jar</code> and the servlet APIs are in
+<code>/somewhere/else/servlet.jar</code>, then you would execute it by typing:
+
+<pre class="tty">% ant -Djava.lib.jamon=/usr/share/java/jamon.jar      -Djava.lib.servlet=/somewhere/else/servlet.jar</pre>
+
+This will translate the Jamon source into Java, compile them and the servlet, and
+place it all into a WAR file called <code>foobar.war</code>.
+(You can download a copy of the <a href="foobar.war">WAR file</a> if you like.)
+Place the WAR file where your servlet container expects to find web applications
+and start the container.
+Assuming you deployed the above servlet into
+a context called "foobar" and that the container listens for HTTP requests on port 8080,
+you should receive a worldly greeting by pointing a browser to
+<a href="http://localhost:8080/foobar/hello">http://localhost:8080/foobar/hello</a>.
+</li>
+
+  <li><span class="concept">Passing parameters and receiving input</span>
+
+In this section we elaborate on the previous example by passing the
+template some parameters.  Then we allow the user to submit values and
+have them processed by the template.
+
+<p>
+
+Suppose we want a servlet that will print out the above message an
+arbitrary number of times.  We can do this with the following
+template.
+
+<pre class="template"><span class='changed'>&lt;%args&gt;
+</span><span class='changed'>  int num;
+</span><span class='changed'>&lt;/%args&gt;
+</span>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+<span class='changed'>&lt;%for int i = 0; i &lt; num; i++ %&gt;    Hello world!
+</span><span class='changed'>&lt;/%for&gt;
+</span><span class='deleted'>    Hello world!
+</span>  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+(You should be able to distinguish lines that are <span class="changed">new or
+changed</span><span class="deleted"> or deleted</span>).
+
+<pre class="template"><span class='deleted'>package foo.bar;
+</span><span class='deleted'>import java.io.IOException;
+</span><span class='deleted'>import javax.servlet.http.HttpServlet;
+</span><span class='deleted'>import javax.servlet.http.HttpServletRequest;
+</span><span class='deleted'>import javax.servlet.http.HttpServletResponse;
+</span><span class='deleted'>import org.jamon.compiler.RecompilingTemplateManager;
+</span><span class='deleted'>import org.jamon.TemplateManagerSource;
+</span><span class='deleted'>public final class HelloServlet
+</span><span class='deleted'>    extends HttpServlet {
+</span><span class='deleted'>    public void init() {
+</span><span class='deleted'>        RecompilingTemplateManager.Data data =
+</span><span class='deleted'>            new RecompilingTemplateManager.Data();
+</span><span class='deleted'>        data.setSourceDir("templates");
+</span><span class='deleted'>        data.setWorkDir("build/work");
+</span><span class='deleted'>        TemplateManagerSource.setTemplateManager(
+</span><span class='deleted'>            new RecompilingTemplateManager(data));
+</span><span class='deleted'>    }
+</span>    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        response.setContentType("text/html");
+<span class='changed'>        HelloTemplate helloTemplate = new HelloTemplate();
+</span><span class='changed'>        helloTemplate.render(response.getWriter(), 10);
+</span><span class='deleted'>        new HelloTemplate().render(response.getWriter());
+</span><span class='deleted'>    }
+</span>    }
+</pre>
+
+
+(note that Java code identical to the previous example has been
+omitted.)  The above code will result in "Hello World!" being printed
+out ten times.
+
+<p>
+Suppose we want the user to be able to specify the number times the message is
+displayed.  We can achieve that with a template such as:
+
+<pre class="template">&lt;%args&gt;
+<span class='changed'>  int num = 0;
+</span><span class='deleted'>  int num;
+</span>&lt;/%args&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+&lt;%for int i = 0; i &lt; num; i++ %&gt;    Hello world!
+&lt;/%for&gt;
+<span class='changed'>    &lt;hr&gt;
+</span><span class='changed'>    &lt;form method="GET" action="hello"&gt;
+</span><span class='changed'>      How many times would you like to be greeted?
+</span><span class='changed'>      &lt;input type="text" name="num" /&gt;
+</span><span class='changed'>      &lt;br&gt;
+</span><span class='changed'>      &lt;input type="submit" value="Greet Me"/&gt;
+</span><span class='changed'>    &lt;/form&gt;
+</span>  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+The corresponding servlet would look like:
+
+<pre class="template">    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        response.setContentType("text/html");
+        HelloTemplate helloTemplate = new HelloTemplate();
+<span class='changed'>        String numString = request.getParameter("num");
+</span><span class='changed'>        if (numString != null) {
+</span><span class='changed'>            helloTemplate.setNum(Integer.parseInt(numString));
+</span><span class='changed'>        }
+</span><span class='changed'>        helloTemplate.render(response.getWriter());
+</span><span class='deleted'>        helloTemplate.render(response.getWriter(), 10);
+</span>    }
+</pre>
+
+
+However, there is something unsatisfactory about this:
+
+<div class="smell">
+  <dl>
+    <dt>Smell #1</dt>
+    <dd>The name of the CGI parameter "num" is independently specified in two places.</dd>
+  </dl>
+</div>
+
+Since the object responsible for parsing the parameter seems like the
+natural owner of the name of the parameter, for the moment we reduce
+the smell by doing this:
+
+<pre class="template">&lt;%args&gt;
+  int num = 0;
+&lt;/%args&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+&lt;%for int i = 0; i &lt; num; i++ %&gt;    Hello world!
+&lt;/%for&gt;
+    &lt;hr&gt;
+    &lt;form method="GET" action="hello"&gt;
+      How many times would you like to be greeted?
+<span class='changed'>      &lt;input type="text" name="&lt;% HelloServlet.NUM_KEY %&gt;" /&gt;
+</span><span class='deleted'>      &lt;input type="text" name="num" /&gt;
+</span>      &lt;br&gt;
+      &lt;input type="submit" value="Greet Me"/&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+and
+
+<pre class="template">    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        response.setContentType("text/html");
+        HelloTemplate helloTemplate = new HelloTemplate();
+<span class='changed'>        String numString = request.getParameter(NUM_KEY);
+</span><span class='deleted'>        String numString = request.getParameter("num");
+</span>        if (numString != null) {
+            helloTemplate.setNum(Integer.parseInt(numString));
+        }
+        helloTemplate.render(response.getWriter());
+    }
+<span class='changed'>    public static final String NUM_KEY = "num";
+</span></pre>
+
+
+The next problem to address is the fact that no validation is
+performed on the data coming from the web.  For example a user may
+enter "a" as the number of times they want to be greeted which would
+cause the <span class="code">doGet</span> method to throw a <span
+class="code">NumberFormatException</span>.  Thus we need to catch this
+as follows (unchanged code is omitted).  In the servlet we need:
+
+<pre class="template"><span class='deleted'>    public void doGet(HttpServletRequest request, HttpServletResponse response)
+</span><span class='deleted'>        throws IOException {
+</span><span class='deleted'>        response.setContentType("text/html");
+</span><span class='deleted'>        HelloTemplate helloTemplate = new HelloTemplate();
+</span><span class='deleted'>        String numString = request.getParameter(NUM_KEY);
+</span>        if (numString != null) {
+<span class='changed'>            try {
+</span>                helloTemplate.setNum(Integer.parseInt(numString));
+            }
+<span class='changed'>            catch (NumberFormatException e) {
+</span><span class='changed'>                helloTemplate.setError(true);
+</span><span class='deleted'>        helloTemplate.render(response.getWriter());
+</span>            }
+<span class='changed'>        }
+</span><span class='changed'>        helloTemplate.render();
+</span><span class='deleted'>    public static final String NUM_KEY = "num";
+</span></pre>
+
+
+and the template needs an additional error parameter:
+
+<pre class="template">&lt;%args&gt;
+  int num = 0;
+<span class='changed'>  boolean error = false;
+</span>&lt;/%args&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+&lt;%for int i = 0; i &lt; num; i++ %&gt;    Hello world!
+&lt;/%for&gt;
+    &lt;hr&gt;
+    &lt;form method="GET" action="hello"&gt;
+<span class='changed'>&lt;%if error %&gt;&lt;b&gt;The data you entered was invalid&lt;/b&gt;&lt;br&gt;&lt;/%if&gt;
+</span>      How many times would you like to be greeted?
+      &lt;input type="text" name="&lt;% HelloServlet.NUM_KEY %&gt;" /&gt;
+      &lt;br&gt;
+      &lt;input type="submit" value="Greet Me"/&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+However, in spite of all this the servlet leaves a great deal to be
+desired.  For example invalid input should be returned to the user for
+editing.  Furthermore there are other ways the above solution seems
+inadequate:
+
+<div class="smell">
+  <dl>
+    <dt>Smell #2</dt>
+    <dd>Catching errors seems <em>ad hoc</em> and hard to extend.</dd>
+
+    <dt>Smell #3</dt>
+    <dd>The servlet doesn't seem like the right place to be doing validation.</dd>
+  </dl>
+</div>
+The next section presents solutions to these problems.
+
+</li>
+
+  <li><span class="concept">Using input elements</span>
+
+To aid in the generation and parsing of forms, it helps to have a library of input objects and
+corresponding templates.  For example, for text inputs, there could be an
+<code>html.TextInputField</code> class:
+
+<pre class="java">package foo.bar.html;
+
+public class TextInputField {
+  public TextInputField(String p_name) {
+    this (p_name, null);
+  }
+
+  public TextInputField(String p_name, String p_value) {
+    m_name = p_name;
+    m_value = p_value;
+  }
+
+  public String getName() {
+    return m_name;
+  }
+
+  public String getValue() {
+    return m_value;
+  }
+
+  private final String m_name;
+  private final String m_value;
+}
+</pre>
+
+
+and corresponding template <code>/html/TextInput.jamon</code> to generate text inputs:
+
+<pre class="jamon">&lt;%args&gt;
+  TextInputField input;
+&lt;/%args&gt;
+
+&lt;input type='text' name='&lt;% input.getName() #H %&gt;' value='&lt;% input.getValue() #H %&gt;'/&gt;
+</pre>
+
+
+Since it is the controller that will be receiving and parsing the data from
+the form it is natural that it decide what the name of each CGI parameter
+should be as well as the default value the input element should display.  Hence
+it is natural to pass input objects like the one above into the template that
+renders the view.  Furthermore since parsing the data that comes back also
+needs access to the names of the parameters it natural to place all this in
+one class.  This is a <code>FormFields</code> class.
+<p>
+For example, here is a FormFields class suitable for use in our "Hello World"
+application (you can also download a
+<a href="example2/foobar.zip">zipfile</a> with all the
+sources from this section, or a <a href="example2/foobar.war">WAR file</a>
+ready for deployment):
+
+  <pre class="java">package foo.bar;
+
+import java.util.Map;
+import foo.bar.html.TextInputField;
+
+public class HelloFormFields {
+
+    public HelloFormFields(int p_number) {
+        m_number = String.valueOf(p_number);
+    }
+
+    public HelloFormFields(Map p_data) {
+        String[] numbers = (String[])p_data.get(NUMBER_KEY);
+        if (numbers == null) {
+            m_number = null;
+        } else {
+            m_number = numbers[0];
+        }
+    }
+
+    public TextInputField getNumberInput() {
+        return new TextInputField(NUMBER_KEY, m_number);
+    }
+
+    public boolean hasData() {
+        return m_number != null;
+    }
+
+    public int parse()
+        throws ValidationException {
+        try {
+            int number = Integer.parseInt(m_number);
+            if (number &lt; 1 || number &gt; MAX_NUMBER) {
+                ValidationErrors errors = new ValidationErrors();
+                errors.outOfRange();
+                throw new ValidationException(errors);
+            }
+            return number;
+        } catch (NumberFormatException e) {
+            ValidationErrors errors = new ValidationErrors();
+            errors.notANumber();
+            throw new ValidationException(errors);
+        }
+    }
+
+    public static class ValidationErrors {
+
+        public boolean hasErrors() {
+            return m_notANumber || m_outOfRange;
+        }
+
+        public boolean isNotANumber() {
+            return m_notANumber;
+        }
+
+        public boolean isOutOfRange() {
+            return m_outOfRange;
+        }
+
+        void notANumber() {
+            m_notANumber = true;
+        }
+
+        void outOfRange() {
+            m_outOfRange = true;
+        }
+
+        private boolean m_notANumber, m_outOfRange;
+
+    } // end of inner class ValidationErrors
+
+
+    public static class ValidationException
+        extends Exception {
+
+        ValidationException(ValidationErrors p_errors) {
+            m_errors = p_errors;
+        }
+
+        public ValidationErrors getErrors() {
+            return m_errors;
+        }
+
+        private final ValidationErrors m_errors;
+    } // end of inner class ValidationException
+
+
+    private final String m_number;
+
+    private static final String NUMBER_KEY = "num";
+    private static final int MAX_NUMBER = 20;
+
+}
+</pre>
+
+
+Here is a servlet that will use the above class:
+
+  <pre class="java">package foo.bar;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.jamon.compiler.RecompilingTemplateManager;
+import org.jamon.TemplateManagerSource;
+
+public final class HelloServlet
+    extends HttpServlet {
+
+    public void init() {
+        RecompilingTemplateManager.Data data = new RecompilingTemplateManager.Data();
+        data.setSourceDir("templates");
+        data.setWorkDir("build/work");
+        TemplateManagerSource.setTemplateManager(
+            new RecompilingTemplateManager(data));
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        response.setContentType("text/html");
+        HelloTemplate helloTemplate = new HelloTemplate();
+        HelloFormFields formFields = new HelloFormFields(request.getParameterMap());
+        if (formFields.hasData()) {
+            try {
+                helloTemplate.setNum(formFields.parse());
+            } catch (HelloFormFields.ValidationException e) {
+                helloTemplate.setErrors(e.getErrors());
+            }
+        } else {
+            formFields = new HelloFormFields(DEFAULT_NUMBER);
+        }
+        helloTemplate.render(response.getWriter(), formFields);
+    }
+
+    private static final int DEFAULT_NUMBER = 10;
+
+}
+</pre>
+
+
+and the corresponding template should look like:
+
+  <pre class="jamon">&lt;%args&gt;
+  int num = 0;
+  HelloFormFields formFields;
+  HelloFormFields.ValidationErrors errors = new HelloFormFields.ValidationErrors();
+&lt;/%args&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Hello World&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+&lt;%for int i = 0; i &lt; num; i++ %&gt;    Hello world!
+&lt;/%for&gt;
+    &lt;hr&gt;
+    &lt;%if errors.hasErrors() %&gt;
+      There were some problems with the data you submitted:
+        &lt;ul&gt;
+          &lt;%if errors.isNotANumber() %&gt;&lt;li&gt;The data you entered is not a number&lt;/li&gt;&lt;/%if&gt;
+          &lt;%if errors.isOutOfRange() %&gt;&lt;li&gt;The number you entered is out of range&lt;/li&gt;&lt;/%if&gt;
+        &lt;/ul&gt;
+    &lt;/%if&gt;
+    &lt;form method="GET" action="hello"&gt;
+      How many times would you like to be greeted?
+      &lt;&amp; html/TextInput; input = formFields.getNumberInput() &amp;&gt;
+      &lt;br&gt;
+      &lt;input type="submit" value="Greet Me"/&gt;
+    &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+There are a few things to note about the above example.
+<ul>
+  <li><code>HelloFormFields</code> produces
+    <code class="code">html.TextInput</code>
+    objects which are rendered as HTML input elements by the
+    <code class="template">/html/TextInput</code>
+    template</li>
+  <li>If the user makes an error while entering their data (for example,
+by typing "13q") then they will be presented with an error message together
+with the data they entered, so they can edit it (in this case they could just
+delete the "q" and resubmit).</li>
+</ul>
+
+<p>
+
+If you are interested in improving the above, here are some exercises:
+<ol>
+  <li>Make the error messages more fine-grained (for example, indicate
+    when a number is negative)</li>
+  <li>Indicate what the maximum allowable number is (the challenge is to find the
+    "right" place to put the data)</li>
+  <li>In the example above the same template was used to both gather user input
+    and display the result.
+    It is probably better to have two different templates, one dedicated to
+    each task.</li>
+</ol>
+</li>
+
+  <h2>Appendix</h2>
+
+  <li value="1" type="A"><span class="concept">Using Tomcat as your Servlet Container</span>
+
+The reference implementation of Sun's servlet specification is 
+<a href="http://jakarta.apache.org/tomcat/">Tomcat</a>.  On a Linux
+based system, web applications are often placed in the directory
+<code class="file">/var/tomcat4/webapps/</code> so you could 
+test a WAR file called <code class="file">foobar.war</code> (located
+in the current directory) by typing the following as superuser:
+<pre class="tty">
+# /sbin/service tomcat4 stop
+# cp foorbar.war /var/tomcat4/webapps
+# /sbin/service tomcat4 start
+</pre>
+(make sure that <code class="file">/var/tomcat4/webapps/</code> is writable
+by the user that that Tomcat runs as so that it can expand the WAR file.)
+
+<p>
+
+However it is very convenient to run a servlet container as unprivilged user.
+This can be done directly from an Ant script by placing the following targets
+in your script:
+<pre class="ant">
+  &lt;target name="init-tomcat"&gt;
+    &lt;property name="tomcat.install.dir" value="/var/tomcat4"/&gt;
+    &lt;property name="tomcat.home.dir" value="${basedir}/${build.dir}/tomcat"/&gt;
+    &lt;property name="java.lib.tomcat" value="${tomcat.install.dir}/bin/bootstrap.jar"/&gt;
+    &lt;property name="tomcat.main.class" value="org.apache.catalina.startup.Bootstrap"/&gt;
+    &lt;property name="tmp.dir" value="${build.dir}"/&gt;
+    &lt;mkdir dir="${tomcat.home.dir}/webapps"/&gt;
+    &lt;mkdir dir="${tomcat.home.dir}/logs"/&gt;
+    &lt;filter token="CONTAINER_PORT" value="${port}"/&gt;
+    &lt;filter token="TOMCAT_HOME" value="${tomcat.home.dir}"/&gt;
+    &lt;filter token="TOMCAT_INSTALL" value="${tomcat.install.dir}"/&gt;
+    &lt;copy file="resources/server.xml" todir="${tomcat.home.dir}/conf" filtering="on"/&gt;
+    &lt;copy file="resources/tomcat-users.xml" todir="${tomcat.home.dir}/conf"/&gt;
+    &lt;copy file="resources/catalina.policy" todir="${tomcat.home.dir}/conf"/&gt;
+    &lt;copy file="resources/default-web.xml" tofile="${tomcat.home.dir}/conf/web.xml"/&gt;
+  &lt;/target&gt;
+
+  &lt;target name="start-tomcat"
+          depends="init-tomcat"
+          description="Starts the Tomcat servlet container"&gt;
+    &lt;java classname="${tomcat.main.class}"
+          classpath="${java.lib.tomcat}"
+          fork="yes"&gt;
+      &lt;sysproperty key="java.endorsed.dirs" value=""/&gt;
+      &lt;sysproperty key="catalina.base" value="${tomcat.home.dir}"/&gt;
+      &lt;sysproperty key="catalina.home" value="${tomcat.install.dir}"/&gt;
+      &lt;sysproperty key="java.io.tmpdir" value="${tmp.dir}"/&gt;
+      &lt;arg value="start"/&gt;
+    &lt;/java&gt;
+  &lt;/target&gt;
+
+  &lt;target name="stop-tomcat"
+          depends="init-tomcat"
+          description="Stops the Tomcat servlet container"&gt;
+    &lt;java classname="${tomcat.main.class}"
+          classpath="${java.lib.tomcat}"
+          fork="yes"&gt;
+      &lt;sysproperty key="java.endorsed.dirs" value=""/&gt;
+      &lt;sysproperty key="catalina.base" value="${tomcat.home.dir}"/&gt;
+      &lt;sysproperty key="catalina.home" value="${tomcat.install.dir}"/&gt;
+      &lt;sysproperty key="java.io.tmpdir" value="${tmp.dir}"/&gt;
+      &lt;arg value="stop"/&gt;
+    &lt;/java&gt;
+  &lt;/target&gt;
+</pre>
+You may need to customize the above (in particular make sure that the
+<code>tomcat.install.dir</code> is correct for your system).  Also
+download copies of <a href="server.xml">server.xml</a>, 
+<a href="tomcat-users.xml">tomcat-users.xml</a>,
+<a href="catalina.policy">catalina.policy</a>,
+<a href="default-web.xml">default-web.xml</a> (this is distinct from the usual deployment
+descriptor that comes with a web application).  Place them in a directory
+called <code class="file">resources</code>.
+Then you can start up Tomcat by typing
+
+  <pre class="tty">% ant start-tomcat</pre>
+
+and stop it by typing
+
+  <pre class="tty">% ant stop-tomcat</pre>
+
+without ever needing super user privileges.</li>
+
+  <li type="A"><span class="concept">Colophon</span>
+  This entire document was generated with the aid of Jamon.  Issues such as
+  <ul>
+    <li>HTML escaping of templates and XML,</li>
+    <li>highlighting changes in snippets of Java or Jamon code, and</li>
+    <li>generation of source files (Java and Jamon) that exactly reflect what is
+      is in this document</li>
+  </ul>
+  were dealt with automatically.  Furthermore, part of the process of
+  generating this documentation was compiling some of the examples and
+  placing the classes in WAR files.  So you can be sure the examples
+  at least compile.  In particular this also means that Jamon is being
+  used to autogenerate Jamon sources!
+</li>
+
+</ol>
+
+
+      </div>
+
+    <div id="logo">
+    <h1 id="logo1">Jamon</h1>
+    <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+
+  </body>
+</html>
+
