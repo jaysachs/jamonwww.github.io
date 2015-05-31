@@ -1,0 +1,609 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- svn-version: ${svn.version} -->
+<html>
+  <head>
+    <title>Jamon Changes</title>
+    <meta name="keywords" content="template,templates,typed,dynamic,text,java,MVC,render,model-view-controller,typesafety,typesafe"></meta>
+    <link rel="SHORTCUT ICON" href="/favicon.ico">
+    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+
+    <div id="logo">
+      <h1 id="logo1">Jamon</h1>
+      <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+    <h3 id="tagline">
+      <span class="tagline1">type</span> <span class="tagline2">safe</span> <span class="tagline3">templating</span><br />
+    </h3>
+
+    <div class="header" id="header1"><span /></div>
+    <div class="header" id="header2"><span /></div>
+    <div class="header" id="header3"><span /></div>
+    <div class="header" id="header4"><span /></div>
+
+    <div id="nav">
+      <ul class="nav">
+          <li class="nav"
+    >
+<a href="index.html" >Home</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Features.html" >Features</a>
+</li>
+
+          <li class="nav"
+    id="current">
+<a href="News.html" >News</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Download.html" >Download</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Contact.html" >Contact</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="About.html" >About</a>
+</li>
+
+        </ul>
+
+        <ul class="nav">
+          <li class="static">Documentation</li>
+          <li class="nav"
+    >
+<a href="Overview.html" >Overview</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="tutorial/TutorialPath.html" >Tutorial</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="GeneratedTemplates.html" >Generated classes</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="UserGuide.html" >User's Guide</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Ant.html" >Ant integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Maven.html" >Maven integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Eclipse.html" >Eclipse plugin</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Servlets.html" >Servlet usage</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Reference.html" >Reference manual</a>
+</li>
+
+          <li class="nav">
+           <a href='javadoc/index.html'>Javadoc</a>
+          </li>
+        </ul>
+      </div>
+      <div id="main">
+        <h2>Jamon Changes</h2>
+
+<a name="eclipse-2.3.3"/><h3>Eclipse Feature Changes from 2.3.2 to 2.3.3</h3>
+<ul>
+  <li>
+   
+    
+    Oddities in editor with multi-line imports and doc tags fixed.
+  
+  </li>
+
+  <li>
+   
+    
+    Jamon preference panes only appear on project pref pane.
+  
+  </li>
+
+</ul>
+
+<a name="processor-2.3.3"/><h3>Processor Changes from 2.3.2 to 2.3.3</h3>
+<ul>
+  <li>
+   
+    
+    Efforts made to generate identical class names for fragments, which should help
+    hot-reload tools such as JavaRebel.
+  
+  </li>
+
+</ul>
+
+<a name="processor-2.3.2"/><h3>Processor Changes from 2.3.1 to 2.3.2</h3>
+<ul>
+  <li>
+   
+    
+    Default escaping can now be set via <code>jamon.properties</code>, as well as in a template.
+  
+  </li>
+
+</ul>
+
+<a name="runtime-2.3.1"/><h3>Runtime Changes from 2.3.0 to 2.3.1</h3>
+<ul>
+  <li>
+   
+    
+    Fix bug where "null" rather than "" was being emitted for null
+    objects using the standard emitter.  Note that this same bug was fixed in 2.2.2, but regressed
+    during mavenization.
+  
+  </li>
+
+</ul>
+
+<a name="eclipse-2.3.1"/><h3>Eclipse Feature Changes from 2.3.0.1 to 2.3.1</h3>
+<ul>
+  <li>
+   
+    
+    The Eclipse feature is no longer tied to a single version of Jamon.
+    This version of the feature will work with versions 2.3 and later
+    of jamon-processor.  A new Jamon Processor Feature can be used to
+    provide a default processor version, but other versions can be
+    chosen on a per-project basis via project properties.
+  
+  </li>
+
+</ul>
+
+<a name="2.3.0"/><h3>Jamon Changes from 2.2.2 to 2.3.0</h3></a>
+<ul>
+  <li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+    Full "mavenification", and more granular libraries. In particular,
+    a creation of a <code>jamon-runtime</code> jar, containing the
+    minimal classes needed at runtime.
+  
+  </li>
+
+
+  <li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+    Maven plugin changes: renamed to jamon-maven-plugin.
+    Automatically adds generated classes to compile roots.
+    Supports generating templates in test phase as well.
+  
+  </li>
+
+
+  <li>
+   
+    
+    Fix errors occurring in Eclipse editor in the presence of malformed
+    nested <code>&lt;&amp; call &amp;&gt;</code> tags. (#1746242)
+  
+  </li>
+
+
+  <li>
+   
+    
+    Fix end of line whitespace '\'-consumption for Windows line endings.
+    (#1751664)
+  
+  </li>
+
+</ul>
+
+<a name="2.2.2"/><h3>Jamon Changes from 2.2.1 to 2.2.2</h3></a>
+<ul>
+  <li>
+   
+    
+    Fix errors occurring in Eclipse editor in the presence of multiline
+    <code>&lt;%doc&gt;</code> and <code>&lt;&amp; call &amp;&gt;</code> tags.
+  
+  </li>
+
+
+  <li>
+   
+    
+    Fix bug where "null" rather than "" was being emitted for null
+    objects using the standard emitter.
+  
+  </li>
+
+</ul>
+
+<a name="2.2.1"/><h3>Jamon Changes from 2.2 to 2.2.1</h3></a>
+<ul>
+  <li>
+   
+    
+    A bug which prevented the Eclipse plugin from properly handling templates which referenced
+    "library only" templates from jars has been fixed.
+  
+  </li>
+
+
+  <li>
+   
+    
+    The Eclipse plugin is now capable of handling a template directory which is not the top-level
+    directory in a project.
+  
+  </li>
+
+</ul>
+
+<a name="2.2"/><h3>Jamon Changes from 2.1 to 2.2</h3></a>
+<ul>
+<li>
+   
+    
+  Path aliases can be set through <code>jamon.properties</code> as well as in a template.
+
+  </li>
+
+
+<li>
+   
+    
+  The "java line" syntax, where a line begining with a % is interpreted to be in-line java code,
+  has been deprecated.  In it's place, a new syntax is introduced allowing short java snippets
+  such as <code>&lt;%java int x = 4; %&gt;</code>
+
+  </li>
+
+
+<li>
+   
+    
+  Add the ability to add custom class-level annotations to generated java files.  Jamon will no
+  longer add a <code>@SuppressWarnings("unused")</code> to Proxy files, so templates specifying
+  imports which are not used in the Proxy class may want to add
+  <code>&lt;%annotate @SuppressWarnings("unused") #proxy %&gt;</code>.
+
+  </li>
+
+
+<li>
+   
+    
+  Syntax highlighting of jamon syntax elements has been added to the Eclipse plugin.
+
+  </li>
+
+
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+  Switch from using static final String arrays to annotations in proxy classes to describe template
+  interfaces.  Existing templates will need to be recompiled.
+
+  </li>
+
+
+<li>
+   
+    
+  Fix bug where the template processor would go into an infinite loop in certain cases
+  while parsing an xargs section.
+
+  </li>
+
+</ul>
+
+<a name="2.1"><h3>Jamon Changes from 2.0 to 2.1</h3></a>
+<ul>
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+  Emit mode is now specified in jamon.properties, rather than as an argument
+  to the ant task or TemplateProcessor.
+
+  </li>
+
+
+<li>
+   
+    
+  Jamon templates may optionally have a context variable which is passed from
+  template to template.
+
+  </li>
+
+
+<li>
+   
+    
+  The <code>getRootCause</code> method on JamonRuntimeException is deprecated
+  in favor of the <code>getCause</code> method.
+
+  </li>
+
+
+<li>
+   
+    
+  Various changes to generated code which, while having no functional impact,
+  should cut down on the number of warnings, especially inside of Eclipse.
+
+  </li>
+
+</ul>
+
+<a name="2.0"><h3>Jamon Changes from 1.3 to 2.0</h3></a>
+<ul>
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+  Jamon now requires Java 1.5.  Users with prior jdk requirements should use
+  Jamon 1.3 instead.
+
+  </li>
+
+
+<li>
+   
+    
+  The parsing engine has been rewritten from the ground up.  Benefits include
+  better error messages, faster template processing times, and the ability to
+  more easily support flexible syntax.
+
+  </li>
+
+
+<li>
+   
+    
+  The standard library is now downloaded as a separate package.
+
+  </li>
+
+
+<li>
+   
+    
+  Support for generics has been added.  Argument types can be paramterized
+  types, and templates themselves can be generic.
+
+  </li>
+
+
+<li>
+   
+    
+  The old "arrow style" for passing arguments has been deprecated in favor of
+  a more natural "equals style".  Instead of making calls like
+  <code>&lt;&amp; someTemplate: name =&gt; value &amp;&gt;</code>, the new style is
+  <code>&lt;&amp; someTemplate: name = value &amp;&gt;</code>.  A similar change has
+  been made for declaring default values for optional arguments, and path
+  aliases.
+
+  </li>
+
+
+<li>
+   
+    
+  In an effort to reduce reliance on java code sections which open a block which
+  must be closed in a subsequence java code section, the following tags have
+  been added:
+  <ul>
+    <li><code>&lt;%if <em>conditition</em>&gt;...&lt;%elseif <em>condition</em>&gt;...&lt;%else&gt;...&lt;/%if&gt;</code></li>
+    <li><code>&lt;%for  <em>init</em>; <em>test</em>; <em>update</em>&gt;...&lt;/%for&gt;</code></li>
+    <li><code>&lt;%for  <em>Type var : list</em>&gt;...&lt;/%for&gt;</code></li>
+    <li><code>&lt;%while  <em>test</em>&gt;...&lt;/%while&gt;</code></li>
+  </ul>
+
+  </li>
+
+
+<li>
+   
+    
+  Support for static imports has been added, eg:
+  <code>&lt;%import&gt;static com.mycompany.SomeEnum.*&lt;/%import&gt;</code>
+
+  </li>
+
+
+<li>
+   
+    
+  An Eclipse plugin has been added; point your eclipse update manager to
+  http://www.jamon.org/eclipse/updates/
+
+  </li>
+
+</ul>
+
+<a name="1.3"><h3>Jamon Changes from 1.2 to 1.3</h3></a>
+
+<li>
+   
+    
+
+  Invocations of public methods on templates only throw IOException
+  when there is an IOException on the underlying writer. Other
+  exceptions, e.g. relating to compilation errors of dynamically
+  modified templates, are now JamonRuntimeExceptions. One side effect
+  of this is that invoking Renderer.asString() no longer throws
+  IOException.
+
+
+  </li>
+
+
+<li>
+   
+    
+
+  The character encoding of a template can now be specified via the
+
+    &lt;%encoding ...&gt;
+
+  declaration, which, if present, must occur at the very beginning of
+  a template source file.
+
+
+  </li>
+
+
+<li>
+   
+    
+
+  It is now possible to specify what types are legally included in
+  emit (<code>&lt;% ... %&gt;</code>) directives via the <a
+  href="Reference.html#emitMode">EmitMode</a>. This is specifiable for
+  all templates only, by supplying the appropriate attribute to the <a
+  href="JamonTask.html">JamonTask</a>, and via the corresponding
+  attribute on the <code>RecompilingTemplateManager</code>.
+
+
+  </li>
+
+</ul>
+
+<a name="1.2"><h3>Jamon Changes from 1.1 to 1.2</h3></a>
+
+<ul>
+<li>
+   
+    
+    Added a positional parameter passing syntax for invoking templates
+    and subtemplates.
+
+  </li>
+
+
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+    The writer is publicly accessible as <code>jamonWriter</code>
+    variable, and is no longer an instance on the template.
+
+  </li>
+
+
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+    Fixed and refactored reflective template invocation, adding
+    facilities to introspect on template arguments and types.
+    <code>Invoker</code> becomes <code>TemplateInspector</code>.
+
+  </li>
+
+
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+    <code>Renderer</code> becomes an
+    interface, <code>AbstractRenderer</code> replaces it as the
+    abstract superclass.
+
+  </li>
+
+
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+    Default escaping is no longer set at runtime
+    via <code>escapeWith</code>, but statically declared
+    via <code>&lt;%escaping ...&gt;</code> directive.
+
+  </li>
+
+
+<li>
+   <span class="incompatible">[INCOMPATIBLE]</span>
+    
+    Flushing the writer after rendering is now done via
+    <code>autoFlush()</code> method, but done by default unless call
+    <code>renderNoFlush()</code>.
+
+  </li>
+
+
+<li>
+   
+    
+    Fixed some subtle bugs in automatic template regeneration and
+    recompilation.
+
+  </li>
+
+
+<li>
+   
+    
+    Changes to the <code>&lt;%import&gt;</code> sections are no longer
+    included in determining if a template (proxy) needs
+    regeneration. The (degenerate) use case that will break involves
+    changing
+
+<pre class="jamon">
+  &lt;%import&gt; java.util.Date; &lt;/%import&gt;
+  &lt;%args&gt; Date date; &lt;/%args&gt;</pre>
+    to
+<pre class="jamon">
+  &lt;%import&gt; java.sql.Date; &lt;/%import&gt;
+  &lt;%args&gt; Date date; &lt;/%args&gt;</pre>
+    within a template, which is unlikely enough to be ignorable.
+
+  </li>
+
+
+<li>
+   
+    
+    Fixed JDK 1.3 compatibility issues
+
+  </li>
+
+</ul>
+
+
+      </div>
+
+    <div id="logo">
+    <h1 id="logo1">Jamon</h1>
+    <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+
+  </body>
+</html>
+

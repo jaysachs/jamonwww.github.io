@@ -1,0 +1,457 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- svn-version: ${svn.version} -->
+<html>
+  <head>
+    <title>Jamon Tutorial - 9. Template Inheritance: Composing Template Output
+</title>
+    <meta name="keywords" content="template,templates,typed,dynamic,text,java,MVC,render,model-view-controller,typesafety,typesafe"></meta>
+    <link rel="SHORTCUT ICON" href="/favicon.ico">
+    <link rel="StyleSheet" href="../base.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+
+    <div id="logo">
+      <h1 id="logo1">Jamon</h1>
+      <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+    <h3 id="tagline">
+      <span class="tagline1">type</span> <span class="tagline2">safe</span> <span class="tagline3">templating</span><br />
+    </h3>
+
+    <div class="header" id="header1"><span /></div>
+    <div class="header" id="header2"><span /></div>
+    <div class="header" id="header3"><span /></div>
+    <div class="header" id="header4"><span /></div>
+
+    <div id="nav">
+      <ul class="nav">
+          <li class="nav"
+    >
+<a href="../index.html" >Home</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Features.html" >Features</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../News.html" >News</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Download.html" >Download</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Contact.html" >Contact</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../About.html" >About</a>
+</li>
+
+        </ul>
+
+        <ul class="nav">
+          <li class="static">Documentation</li>
+          <li class="nav"
+    >
+<a href="../Overview.html" >Overview</a>
+</li>
+
+          <li class="nav"
+    id="current">
+<a href="../tutorial/TutorialPath.html" >Tutorial</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../GeneratedTemplates.html" >Generated classes</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../UserGuide.html" >User's Guide</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Ant.html" >Ant integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Maven.html" >Maven integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Eclipse.html" >Eclipse plugin</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Servlets.html" >Servlet usage</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="../Reference.html" >Reference manual</a>
+</li>
+
+          <li class="nav">
+           <a href='../javadoc/index.html'>Javadoc</a>
+          </li>
+        </ul>
+      </div>
+      <div id="main">
+        <div class="tutorialNav">
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample8.html">Previous</a>
+  
+
+    </span>
+    <span class="tutorialNavContents">
+      <a href="TutorialPath.html">Tutorial contents</a>
+    </span>
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample10.html">Next</a>
+  
+
+    </span>
+  </div>
+
+
+<h2>Jamon Tutorial - 9. Template Inheritance: Composing Template Output
+</h2>
+
+Jamon template inheritance allows a template to declare that it can
+<em>include</em> the output of a <em>child</em> template that extends it.
+(There are other benefits of inheritence as well, which will be explained
+in the next tutorial section.)
+
+<p>
+The benefits of template inclusion are obvious: a containing
+template, for example, can set up the header, footer, and
+navigation bar of a web page while the included
+template can provide the body of the page. Template inheritance makes
+this inclusion easy: a parent template can set up the page
+layout while the child template simply declares that it extends the
+parent in order to have its output included by the parent.
+<p>
+For a template to declare that it supports inheritance it must specify the tag
+<pre class="template"> <code>&lt;%abstract></code></pre>
+Then, where the parent template wants to include the output of a derived, or child, template, it must specify the tag
+<pre class="template"> <code>&lt;&amp;* CHILD &amp;></code></pre>
+
+<p>
+For example, the template <a href="InheritanceParent.jamon" class="file"><code>InheritanceParent.jamon</code></a>, shown below, declares the
+<code>&lt;&amp; *CHILD &amp;></code> where it wants to include the
+child template's output. The parent template takes care of the
+HTML header as well as the page's header banner while the child
+template simply fills in the body.
+
+    <pre class="jamon">&lt;%abstract&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Jamon Documentation&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;%doc&gt; could include a navigation bar here &lt;/%doc&gt;
+    &lt;h1&gt;Jamon&lt;/h1&gt;
+    &lt;h3&gt;a typed template engine for Java&lt;/h3&gt;
+    &lt;hr&gt;
+
+    &lt;&amp; *CHILD &amp;&gt;
+
+    &lt;%doc&gt; could also include a footer here&lt;/%doc&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+<p>
+The child template declares that it extends the parent template by including the tag
+<pre class="template">
+<code>&lt;%extends InheritanceParent></code>
+</pre>
+If the parent template is in a different directory, then the <code>extends</code> tag must specify the path to the parent template.
+<pre class="template">
+<code>&lt;%extends ../InheritanceParent></code>
+</pre>
+The example template below,
+<a href="InheritanceChild.jamon" class="file"><code>InheritanceChild.jamon</code></a> extends <code>InheritanceTemplate</code>
+and provides subject text that is included in the output of the parent template.
+
+    <pre class="jamon">&lt;%extends InheritanceParent&gt;
+
+&lt;h2&gt;Inheritance Documentation&lt;/h2&gt;
+To declare that a template extends a parent template, it must include
+the &lt;code&gt;&amp;lt;%extends&gt;&lt;/code&gt; tag.
+</pre>
+
+
+This template would be invoked from Java with the class
+<a href="InheritanceSimpleTut9.java" class="file"><code>InheritanceSimpleTut9.java</code></a>
+    <pre class="java">import java.io.OutputStreamWriter;
+
+public class InheritanceSimpleTut9
+{
+  public static void main(String[] args) throws Exception {
+    new InheritanceChild().render(new OutputStreamWriter(System.out));
+  }
+}
+</pre>
+
+
+The output from the template is
+<pre class="tty">
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Jamon Documentation&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Jamon&lt;/h1&gt;
+    &lt;h3&gt;a typed template engine for Java&lt;/h3&gt;
+    &lt;hr&gt;
+
+    &lt;h2&gt;Inheritance Documentation&lt;/h2&gt;
+To declare that a template extends a parent template, it must include
+the &lt;code&gt;&amp;lt;%extends&gt;&lt;/code&gt; tag.
+
+
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+<h2>Inheritance with template arguments</h2>
+Both the parent and child templates may take arguments. To specify
+arguments, the parent and child templates simply include a
+<code>&lt;%args></code> ... <code>&lt;/%args></code> tag.
+<p>
+By default, arguments in the parent template are not visible to
+the child template.
+They can be made visible to code in the child
+      template by declaring them in <code>&lt;%xargs&gt;</code>
+      ... <code>&lt;/%xargs&gt;</code> blocks.
+<p>
+For example, consider the parent template
+<a href="InheritanceParentWArgs.jamon" class="file"><code>InheritanceParentWArgs.jamon</code></a>. It defines arguments
+<code>userAccount</code> and <code>title</code>.
+
+    <pre class="jamon">&lt;%abstract&gt;
+&lt;%args&gt;
+  User userAccount;
+  String title = "";
+&lt;/%args&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;&lt;% title %&gt;&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;%doc&gt; could include a navigation bar here &lt;/%doc&gt;
+    &lt;h1&gt;Jamon&lt;/h1&gt;
+    &lt;h3&gt;a typed template engine for Java&lt;/h3&gt;
+    &lt;hr&gt;
+&lt;%if userAccount.isAuthorized() %&gt;
+  &lt;&amp; *CHILD &amp;&gt;
+&lt;%else&gt;
+  &lt;em&gt;Not authorized to view this page.&lt;/em&gt;
+&lt;/%if&gt;
+
+    &lt;%doc&gt; could also include a footer here&lt;/%doc&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+The child template can only access these arguments by including
+<pre class="template">
+
+<%xargs>
+  userAccount;
+  title = "special of the week";
+&lt/%xargs>
+
+</pre>
+
+Notice that only the name of the arguments should be
+listed. This is because the types of the arguments are already
+specified in the parent class. Also note, however, that any
+<em>optional</em> arguments can have their default values redefined in
+the child template.
+<p>
+A complete example of a child template,
+<a href="InheritanceChildWArgs.jamon" class="file"><code>InheritanceChildWArgs.jamon</code></a>, is below.
+
+    <pre class="jamon">&lt;%extends InheritanceParentWArgs&gt;
+&lt;%args&gt;
+  String special;
+&lt;/%args&gt;
+&lt;%xargs&gt;
+  userAccount;
+  title = "special of the week";
+&lt;/%xargs&gt;
+
+&lt;h2&gt;Weekly Special&lt;/h2&gt;
+&lt;% userAccount == null ? "You" : (userAccount.getName() + ", you") %&gt;\
+ qualify for the special of the week!
+&lt;blink&gt;&lt;% special %&gt;&lt;/blink&gt;
+</pre>
+
+
+
+<h3>Invoking a derived template</h3>
+The two choices for invoking a derived template are
+<ol>
+<li>
+   the Java code can call the <code>render()</code> method on the derived
+   template and provide <em>all</em> the arguments that are required
+   by the child template as well as all arguments required by the parent
+   template, or
+<li>the code may also call the <code>makeParentRenderer()</code> method on
+   the derived template, provide the arguments required by the
+   child template, and then call render on the
+   <code>InheritanceParentWArgs.ParentRenderer</code> object returned
+   by <code>makeParentRenderer()</code> method and provide the arguments
+   required by the parent template.
+</ol>
+
+The second approach allows the developer to separate the handling of
+the derived template from the parent template. This allows the generic
+processing of the parent template to be handled in a controller object
+while the specific processing of the child templates can be handled in
+separate Java classes.
+
+<p>
+The class <a href="User.java" class="file"><code>User.java</code></a> implements
+invoking the child template through the second approach described above.
+
+<pre class="java">import java.io.OutputStreamWriter;
+
+public class User
+{
+  private String name;
+  private boolean authorized;
+
+  public User(String p_name, boolean p_authorized) {
+    name = p_name;
+    authorized = p_authorized;
+  }
+
+  public String getName() { return name; }
+  public boolean isAuthorized() { return authorized; }
+
+  public static void main(String[] args) throws Exception {
+    User[] users = new User[2];
+    users[0] = new User("John Public", false);
+    users[1] = new User("John Rockerfeller", true);
+
+    for (int i=0; i&lt;users.length; i++) {
+      // call render() on the parent template and provide arguments
+      processUser(args.length == 0 ? null : args[0])
+        .setTitle("Jamon News")  // set optional argument in parent
+        .render(new OutputStreamWriter(System.out), users[i]);
+    }
+  }
+
+  private static InheritanceParentWArgs.ParentRenderer
+    processUser(String templateName) {
+    // the default template, the special of the week
+    if (templateName == null || "special".equalsIgnoreCase(templateName)) {
+      return new InheritanceChildWArgs()
+        .makeParentRenderer("Jamon free this week only!");
+    } else {
+      // process other derived templates here
+      return null;
+    }
+  }
+}
+</pre>
+
+<p>
+The output from the template is
+<pre class="tty">
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Jamon News&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Jamon&lt;/h1&gt;
+    &lt;h3&gt;a typed template engine for Java&lt;/h3&gt;
+    &lt;hr&gt;
+
+  &lt;em&gt;Not authorized to view this page.&lt;/em&gt;
+
+
+    &lt;/body&gt;
+&lt;/html&gt;
+&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Jamon News&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Jamon&lt;/h1&gt;
+    &lt;h3&gt;a typed template engine for Java&lt;/h3&gt;
+    &lt;hr&gt;
+
+  &lt;h2&gt;Weekly Special&lt;/h2&gt;
+John Rockerfeller, you qualify for the special of the week!
+&lt;blink&gt;Jamon free this week only!&lt;/blink&gt;
+
+
+
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+
+<p>
+
+<div class="tutorialNav">
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample8.html">Previous</a>
+  
+
+    </span>
+    <span class="tutorialNavContents">
+      <a href="TutorialPath.html">Tutorial contents</a>
+    </span>
+    <span class="tutorialNavNeighbor">
+      
+    <a href="TutorialSample10.html">Next</a>
+  
+
+    </span>
+  </div>
+
+
+
+
+
+      </div>
+
+    <div id="logo">
+    <h1 id="logo1">Jamon</h1>
+    <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+
+  </body>
+</html>
+

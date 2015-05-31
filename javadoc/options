@@ -1,0 +1,19 @@
+-classpath '/home/ian/svn/jamon-release/jamon-runtime/target/classes' -protected
+-quiet
+-source
+'1.5'
+-sourcepath
+'/home/ian/svn/jamon-release/jamon-runtime/src/main/java'
+-author
+-bottom
+'jamon'
+-charset
+'ISO-8859-1'
+-d
+'/home/ian/svn/jamon-release/jamon-runtime/target/apidocs'
+-doctitle
+'jamon-runtime 2.3.1 API'
+-use
+-version
+-windowtitle
+'jamon-runtime 2.3.1 API'

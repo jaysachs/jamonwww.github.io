@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- svn-version: ${svn.version} -->
+<html>
+  <head>
+    <title>Using Jamon with Ant</title>
+    <meta name="keywords" content="template,templates,typed,dynamic,text,java,MVC,render,model-view-controller,typesafety,typesafe"></meta>
+    <link rel="SHORTCUT ICON" href="/favicon.ico">
+    <link rel="StyleSheet" href="base.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+
+    <div id="logo">
+      <h1 id="logo1">Jamon</h1>
+      <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+    <h3 id="tagline">
+      <span class="tagline1">type</span> <span class="tagline2">safe</span> <span class="tagline3">templating</span><br />
+    </h3>
+
+    <div class="header" id="header1"><span /></div>
+    <div class="header" id="header2"><span /></div>
+    <div class="header" id="header3"><span /></div>
+    <div class="header" id="header4"><span /></div>
+
+    <div id="nav">
+      <ul class="nav">
+          <li class="nav"
+    >
+<a href="index.html" >Home</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Features.html" >Features</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="News.html" >News</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Download.html" >Download</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Contact.html" >Contact</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="About.html" >About</a>
+</li>
+
+        </ul>
+
+        <ul class="nav">
+          <li class="static">Documentation</li>
+          <li class="nav"
+    >
+<a href="Overview.html" >Overview</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="tutorial/TutorialPath.html" >Tutorial</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="GeneratedTemplates.html" >Generated classes</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="UserGuide.html" >User's Guide</a>
+</li>
+
+          <li class="nav"
+    id="current">
+<a href="Ant.html" >Ant integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Maven.html" >Maven integration</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Eclipse.html" >Eclipse plugin</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Servlets.html" >Servlet usage</a>
+</li>
+
+          <li class="nav"
+    >
+<a href="Reference.html" >Reference manual</a>
+</li>
+
+          <li class="nav">
+           <a href='javadoc/index.html'>Javadoc</a>
+          </li>
+        </ul>
+      </div>
+      <div id="main">
+        <h3>Overview</h3>
+
+<p>
+  Within a Java program, each Jamon template is represented as an
+  instance of a class specific to that template. In order for your
+  program to compile, Jamon templates need to be translated into
+  Java source classes, and those generated Java sources need to be
+  included in the build of your project.
+</p>
+
+<h4>Assumptions</h4>
+<ul>
+  <li>Java source files are located in the directory '<code>src</code>'
+  under your main project directory
+  <li>Jamon templates are located in the directory
+  tree named '<code>templates</code>'
+  <li>generated classes are generated into
+  '<code>classes</code>'
+  <li>Java source files corresponding to Jamon
+  templates will be generated into the directory
+  '<code>tempsrc</code>'.
+</ul>
+
+<h3>Building with Ant</h3>
+
+  First, ensure you have the <a href="JamonTask.html">Jamon task</a>
+  properly defined, which could be accomplished by including the
+  following in the <code>build.xml</code> file:
+
+<pre class="webxml">
+  &lt;path id="jamontaskcp"&gt;
+    &lt;pathelement file="/path/to/jamon-runtime.jar"/&gt;
+    &lt;pathelement file="/path/to/jamon-api.jar"/&gt;
+    &lt;pathelement file="/path/to/jamon-procesor.jar"/&gt;
+    &lt;pathelement file="/path/to/jamon-anttask.jar"/&gt;
+  &lt;/path&gt;
+  &lt;taskdef name="jamon"
+           classname="org.jamon.ant.JamonTask"
+           classpathref="${jamontaskcp}"/&gt;
+</pre>
+
+To generate the Java sources, include the following target:
+
+<pre class="webxml">
+  &lt;target name="templates"&gt;
+    &lt;mkdir dir="tempsrc" /&gt;
+    &lt;jamon destdir="tempsrc" srcdir="templates" /&gt;
+  &lt;/target&gt;</pre>
+
+To compile the project:
+
+<pre class="webxml">
+  &lt;target name="compile"  depends="templates"&gt;
+    &lt;javac destdir="classes" classpath="/path/to/jamon-runtime.jar" &gt;
+      &lt;src path="src"/&gt;
+      &lt;src path="tempsrc"/&gt;
+    &lt;/javac&gt;
+  &lt;/target&gt;
+</pre>
+
+      </div>
+
+    <div id="logo">
+    <h1 id="logo1">Jamon</h1>
+    <h3 id="logo2">a typed template engine for Java</h3>
+    </div>
+
+
+  </body>
+</html>
+
